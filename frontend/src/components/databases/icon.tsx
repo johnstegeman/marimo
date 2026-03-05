@@ -16,6 +16,7 @@ import RedshiftIcon from "./icons/redshift.svg";
 import SnowflakeIcon from "./icons/snowflake.svg";
 import PySparkIcon from "./icons/spark.svg";
 import SQLiteIcon from "./icons/sqlite.svg";
+import Neo4jIcon from "./icons/neo4j.svg";
 import SupabaseIcon from "./icons/supabase.svg";
 import TimeplusIcon from "./icons/timeplus.svg";
 import TrinoIcon from "./icons/trino.svg";
@@ -36,6 +37,7 @@ export type DBLogoName =
   | "iceberg"
   | "datafusion"
   | "pyspark"
+  | "neo4j"
   | "redshift"
   | "supabase";
 
@@ -64,6 +66,7 @@ const URLS: Record<DBLogoName, string | undefined> = {
   iceberg: IcebergIcon,
   datafusion: DataFusionIcon,
   pyspark: PySparkIcon,
+  neo4j: Neo4jIcon,
   redshift: RedshiftIcon,
   supabase: SupabaseIcon,
 };

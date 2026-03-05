@@ -1,7 +1,7 @@
 /* Copyright 2026 Marimo. All rights reserved. */
 
 import type { EditorView } from "@codemirror/view";
-import { DatabaseIcon } from "lucide-react";
+import { DatabaseIcon, NetworkIcon } from "lucide-react";
 import type React from "react";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,10 @@ export const LanguageToggles: React.FC<LanguageTogglesProps> = ({
     () => LanguageAdapters.sql.isSupported(code) || code.trim() === "",
     [code],
   );
+  const canUseCypher = useMemo(
+    () => LanguageAdapters.cypher.isSupported(code) || code.trim() === "",
+    [code],
+  );
 
   return (
     <div className="absolute right-3 top-2 z-20 flex hover-action gap-1">
@@ -49,6 +53,21 @@ export const LanguageToggles: React.FC<LanguageTogglesProps> = ({
         }
         toType="sql"
         displayName="SQL"
+        onAfterToggle={onAfterToggle}
+      />
+      <LanguageToggle
+        editorView={editorView}
+        currentLanguageAdapter={currentLanguageAdapter}
+        canSwitchToLanguage={canUseCypher && currentLanguageAdapter === "python"}
+        icon={
+          <NetworkIcon
+            color={"var(--sky-11)"}
+            strokeWidth={2.5}
+            className="w-4 h-4"
+          />
+        }
+        toType="cypher"
+        displayName="Cypher"
         onAfterToggle={onAfterToggle}
       />
       <LanguageToggle

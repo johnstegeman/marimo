@@ -3171,7 +3171,7 @@ export interface components {
        * @default python
        * @enum {unknown}
        */
-      language?: "markdown" | "python" | "sql";
+      language?: "cypher" | "markdown" | "python" | "sql";
       prompt: string;
       /** @default null */
       selectedText?: string | null;
@@ -3228,7 +3228,7 @@ export interface components {
        * @default python
        * @enum {unknown}
        */
-      language?: "markdown" | "python" | "sql";
+      language?: "cypher" | "markdown" | "python" | "sql";
       prefix: string;
       suffix: string;
     };
@@ -3927,10 +3927,12 @@ export interface components {
      *
      *         - `enabled`: if `True`, diagnostics will be shown in the editor
      *         - `sql_linter`: if `True`, SQL cells will have linting enabled
+     *         - `cypher_linter`: if `True`, Cypher cells will have linting enabled
      */
     DiagnosticsConfig: {
       enabled?: boolean;
       sql_linter?: boolean;
+      cypher_linter?: boolean;
     };
     /**
      * DisplayConfig

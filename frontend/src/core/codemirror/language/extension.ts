@@ -254,6 +254,9 @@ export function languageAdapterFromCode(doc: string): LanguageAdapter {
   if (LanguageAdapters.sql.isSupported(doc)) {
     return LanguageAdapters.sql;
   }
+  if (LanguageAdapters.cypher.isSupported(doc)) {
+    return LanguageAdapters.cypher;
+  }
 
   return LanguageAdapters.python;
 }

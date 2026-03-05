@@ -513,6 +513,34 @@ export const SupabaseConnectionSchema = z
   })
   .describe(FieldOptions.of({ direction: "two-columns" }));
 
+export const Neo4jConnectionSchema = z
+  .object({
+    type: z.literal("neo4j"),
+    uri: z
+      .string()
+      .nonempty()
+      .default("bolt://localhost:7687")
+      .describe(
+        FieldOptions.of({
+          label: "URI",
+          placeholder: "bolt://localhost:7687",
+          optionRegex: ".*uri.*",
+        }),
+      ),
+    username: usernameField(),
+    password: passwordField(),
+    database: z
+      .string()
+      .optional()
+      .describe(
+        FieldOptions.of({
+          label: "Database",
+          placeholder: "neo4j (default)",
+        }),
+      ),
+  })
+  .describe(FieldOptions.of({ direction: "two-columns" }));
+
 export const DatabaseConnectionSchema = z.discriminatedUnion("type", [
   PostgresConnectionSchema,
   MySQLConnectionSchema,

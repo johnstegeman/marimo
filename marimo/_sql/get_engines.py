@@ -11,6 +11,7 @@ from marimo._runtime.context.types import (
     ContextNotInitializedError,
     get_context,
 )
+from marimo._cypher.engines.neo4j import Neo4jEngine
 from marimo._sql.engines.adbc import AdbcDBAPIEngine
 from marimo._sql.engines.clickhouse import (
     ClickhouseEmbedded,
@@ -42,6 +43,7 @@ SUPPORTED_ENGINES: list[type[BaseEngine[Any]]] = [
     RedshiftEngine,
     AdbcDBAPIEngine,
     DBAPIEngine,
+    Neo4jEngine,
 ]
 
 

@@ -12,6 +12,7 @@ import {
   SquareCodeIcon,
   SquareMIcon,
 } from "lucide-react";
+import { CypherIcon } from "@/components/editor/cell/code/icons";
 import { useEffect } from "react";
 import { useOpenSettingsToTab } from "@/components/app-config/state";
 import { StartupLogsAlert } from "@/components/editor/alerts/startup-logs-alert";
@@ -320,6 +321,24 @@ const AddCellButtons: React.FC<{
         >
           <DatabaseIcon className="mr-2 size-4 shrink-0" />
           SQL
+        </Button>
+        <Button
+          className={buttonClass}
+          variant="text"
+          size="sm"
+          disabled={!canInteractWithApp}
+          onClick={() => {
+            maybeAddMarimoImport({ autoInstantiate: true, createNewCell });
+
+            createNewCell({
+              cellId: { type: "__end__", columnId },
+              before: false,
+              code: LanguageAdapters.cypher.defaultCode,
+            });
+          }}
+        >
+          <CypherIcon className="mr-2 size-4 shrink-0" />
+          Cypher
         </Button>
         <Tooltip
           content={

@@ -80,6 +80,14 @@ Marimo's reactivity means:
 - Don't add comments in cells that use mo.sql()
 </sql>
 
+<cypher>
+- When querying Neo4j, use marimo's Cypher cells: _df = mo.cypher(f"""MATCH (n) RETURN n LIMIT 25""", engine=driver)
+- Create a neo4j.Driver first: driver = neo4j.GraphDatabase.driver("neo4j://localhost:7687", auth=("neo4j", "password"))
+- Pass the driver via the engine argument: mo.cypher(query, engine=driver)
+- For graph visualization, use output_type="visualization": mo.cypher(query, engine=driver, output_type="visualization") — requires neo4j-viz
+- Don't add comments in cells that use mo.cypher()
+</cypher>
+
 ## Troubleshooting
 
 Common issues and solutions:

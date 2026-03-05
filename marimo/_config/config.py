@@ -494,10 +494,12 @@ class DiagnosticsConfig(TypedDict, total=False):
 
     - `enabled`: if `True`, diagnostics will be shown in the editor
     - `sql_linter`: if `True`, SQL cells will have linting enabled
+    - `cypher_linter`: if `True`, Cypher cells will have linting enabled
     """
 
     enabled: bool
     sql_linter: bool
+    cypher_linter: bool
 
 
 @dataclass
@@ -741,6 +743,7 @@ DEFAULT_CONFIG: MarimoConfig = {
     },
     "diagnostics": {
         "sql_linter": True,
+        "cypher_linter": True,
     },
 }
 

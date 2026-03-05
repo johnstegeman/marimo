@@ -11,6 +11,7 @@ import { useAutoGrowInputProps } from "@/hooks/useAutoGrowInputProps";
 import { cellIdState } from "../../cells/state";
 import { formatSQL } from "../../format";
 import { languageAdapterState } from "../extension";
+import { CypherLanguageAdapter } from "../languages/cypher";
 import { MarkdownLanguageAdapter } from "../languages/markdown";
 import {
   SQLLanguageAdapter,
@@ -22,6 +23,7 @@ import {
   updateLanguageMetadata,
 } from "../metadata";
 import type { LanguageMetadataOf } from "../types";
+import { CypherEngineSelect, CypherOutputTypeSelect } from "./cypher";
 import { getQuotePrefix, MarkdownQuotePrefixTooltip } from "./markdown";
 import { SQLEngineSelect, SQLModeSelect } from "./sql";
 
@@ -116,6 +118,72 @@ export const LanguagePanelComponent: React.FC<{
               type="checkbox"
               onChange={(e) => {
                 triggerUpdate<Metadata1>({
+                  showOutput: !e.target.checked,
+                });
+              }}
+              checked={!metadata.showOutput}
+            />
+            <span className="select-none">Hide output</span>
+          </label>
+        </div>
+      </div>
+    );
+  }
+
+  if (languageAdapter instanceof CypherLanguageAdapter) {
+    type CypherMetadata = LanguageMetadataOf<CypherLanguageAdapter>;
+    const metadata = view.state.field(languageMetadataField) as CypherMetadata;
+
+    showDivider = true;
+
+    const sanitizeAndTriggerUpdate = (
+      e: React.SyntheticEvent<HTMLInputElement>,
+    ) => {
+      const name = normalizeName(e.currentTarget.value, false);
+      e.currentTarget.value = name;
+      triggerUpdate<CypherMetadata>({ dataframeName: name });
+    };
+
+    const switchEngine = (engine: string) => {
+      triggerUpdate<CypherMetadata>({ engine });
+    };
+
+    actions = (
+      <div className="flex flex-1 gap-2 items-center">
+        <label className="flex gap-2 items-center">
+          <span className="select-none">Output variable: </span>
+          <input
+            {...inputProps}
+            defaultValue={metadata.dataframeName}
+            onChange={(e) => {
+              inputProps.onChange?.(e);
+            }}
+            onBlur={sanitizeAndTriggerUpdate}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && e.shiftKey) {
+                sanitizeAndTriggerUpdate(e);
+              }
+            }}
+            className="min-w-14 w-auto border border-border rounded px-1 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
+          />
+          <span {...spanProps} />
+        </label>
+        <CypherEngineSelect
+          selectedEngine={metadata.engine}
+          onChange={switchEngine}
+          cellId={cellId}
+        />
+        <CypherOutputTypeSelect
+          outputType={metadata.outputType ?? "dataframe"}
+          onChange={(outputType) => triggerUpdate<CypherMetadata>({ outputType })}
+          cellId={cellId}
+        />
+        <div className="flex items-center gap-2 ml-auto">
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              onChange={(e) => {
+                triggerUpdate<CypherMetadata>({
                   showOutput: !e.target.checked,
                 });
               }}

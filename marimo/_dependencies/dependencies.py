@@ -246,6 +246,11 @@ class DependencyManager:
     loro = Dependency("loro")
     boto3 = Dependency("boto3")
     litellm = Dependency("litellm")
+    neo4j = Dependency("neo4j")
+    neo4j_viz = Dependency(
+        "neo4j_viz",
+        pkg_name_to_install="neo4j-viz",
+    )
     redshift_connector = Dependency("redshift_connector")
     mcp = Dependency("mcp")
     pydantic_ai = Dependency(

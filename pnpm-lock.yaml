@@ -163,6 +163,9 @@ importers:
       '@mui/material':
         specifier: ^6.5.0
         version: 6.5.0(@emotion/react@11.14.0(@types/react@19.2.10)(react@19.2.4))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.10)(react@19.2.4))(@types/react@19.2.10)(react@19.2.4))(@types/react@19.2.10)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@neo4j-cypher/editor-support':
+        specifier: 1.0.2
+        version: 1.0.2
       '@open-rpc/client-js':
         specifier: ^1.8.1
         version: 1.8.1
@@ -2014,6 +2017,18 @@ packages:
 
   '@napi-rs/wasm-runtime@1.1.1':
     resolution: {integrity: sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A==}
+
+  '@neo4j-cypher/antlr4-browser@1.0.0':
+    resolution: {integrity: sha512-nd9zDNVfJ1npMxqDfYvsuPidmBwQNgwnrii0EQPTc4JNL+YxCFiH3WmrOrxUl2VYcZVhtYZn/aAnkjIiiOBpeA==}
+    engines: {node: '>=16'}
+
+  '@neo4j-cypher/antlr4@1.0.0':
+    resolution: {integrity: sha512-IwHqZMf79Vf+0xNceCoA1cg3B+v90Q/2zngv7kJgEXViuJrDp7d9ocP62Mp28faJ0rrjoSzByj6XK8Sfxu+Iiw==}
+    engines: {node: '>=16'}
+
+  '@neo4j-cypher/editor-support@1.0.2':
+    resolution: {integrity: sha512-XdlGB5p1vI+f+Mh8NlALayoHWSjBms3aXGFYEaNqF7e75cOWu3q804x+MQk1U+zp0+UqvF82gryqwwgU5s6LUg==}
+    engines: {node: '>=14.0.0'}
 
   '@noble/hashes@1.8.0':
     resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
@@ -4647,6 +4662,10 @@ packages:
   ansi_up@6.0.6:
     resolution: {integrity: sha512-yIa1x3Ecf8jWP4UWEunNjqNX6gzE4vg2gGz+xqRGY+TBSucnYp6RRdPV4brmtg6bQ1ljD48mZ5iGSEj7QEpRKA==}
 
+  antlr4@4.10.1:
+    resolution: {integrity: sha512-fmxidcOwmktzHUD+tz8y/zKLI/NfVAB0+MOvnFUBzo8ToFnphK8JY88oOJeRdhnTrAhjtu45bvxddzbb8nMeIA==}
+    engines: {node: '>=14'}
+
   any-promise@1.3.0:
     resolution: {integrity: sha512-7UvmKalWRt1wgjL1RrGxoSJW/0QZFIegpeGvZG9kjp8vrRu55XTHbwnqq2GpXm9uLbcuhxm3IqX9OB4MZR1b2A==}
 
@@ -6243,6 +6262,10 @@ packages:
   functions-have-names@1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
 
+  fuse.js@6.6.2:
+    resolution: {integrity: sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==}
+    engines: {node: '>=10'}
+
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -7246,6 +7269,12 @@ packages:
 
   lodash-es@4.17.23:
     resolution: {integrity: sha512-kVI48u3PZr38HdYz98UmfPnXl2DXrpdctLrFLCd3kOx1xUkOmpFPx7gCWWM5MPkL/fD8zb+Ph0QzjGFs4+hHWg==}
+
+  lodash.find@4.6.0:
+    resolution: {integrity: sha512-yaRZoAV3Xq28F1iafWN1+a0rflOej93l1DQUejs3SZ41h2O9UJBoS9aueGjPDgAl4B6tPC0NuuchLKaDQQ3Isg==}
+
+  lodash.includes@4.3.0:
+    resolution: {integrity: sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==}
 
   lodash.memoize@4.1.2:
     resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
@@ -11897,6 +11926,24 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
+  '@neo4j-cypher/antlr4-browser@1.0.0':
+    dependencies:
+      '@babel/runtime': 7.27.6
+      antlr4: 4.10.1
+
+  '@neo4j-cypher/antlr4@1.0.0':
+    dependencies:
+      '@babel/runtime': 7.27.6
+      '@neo4j-cypher/antlr4-browser': 1.0.0
+
+  '@neo4j-cypher/editor-support@1.0.2':
+    dependencies:
+      '@babel/runtime': 7.27.6
+      '@neo4j-cypher/antlr4': 1.0.0
+      fuse.js: 6.6.2
+      lodash.find: 4.6.0
+      lodash.includes: 4.3.0
+
   '@noble/hashes@1.8.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
@@ -14884,14 +14931,14 @@ snapshots:
       chai: 5.3.3
       tinyrainbow: 2.0.0
 
-  '@vitest/mocker@3.2.4(msw@2.12.7(@types/node@20.19.30)(typescript@5.9.3))(rolldown-vite@7.3.1(@types/node@24.10.15)(esbuild@0.27.3)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.2))':
+  '@vitest/mocker@3.2.4(msw@2.12.7(@types/node@20.19.30)(typescript@5.9.3))(rolldown-vite@7.3.1(@types/node@20.19.30)(esbuild@0.27.3)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.2))':
     dependencies:
       '@vitest/spy': 3.2.4
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
       msw: 2.12.7(@types/node@20.19.30)(typescript@5.9.3)
-      vite: rolldown-vite@7.3.1(@types/node@24.10.15)(esbuild@0.27.3)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.2)
+      vite: rolldown-vite@7.3.1(@types/node@20.19.30)(esbuild@0.27.3)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.2)
 
   '@vitest/mocker@3.2.4(msw@2.12.7(@types/node@24.10.15)(typescript@5.9.3))(rolldown-vite@7.3.1(@types/node@24.10.15)(esbuild@0.27.3)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.2))':
     dependencies:
@@ -15140,6 +15187,8 @@ snapshots:
   ansi-styles@6.2.3: {}
 
   ansi_up@6.0.6: {}
+
+  antlr4@4.10.1: {}
 
   any-promise@1.3.0: {}
 
@@ -16992,6 +17041,8 @@ snapshots:
 
   functions-have-names@1.2.3: {}
 
+  fuse.js@6.6.2: {}
+
   gensync@1.0.0-beta.2: {}
 
   geojson-vt@3.2.1: {}
@@ -18064,6 +18115,10 @@ snapshots:
       p-locate: 5.0.0
 
   lodash-es@4.17.23: {}
+
+  lodash.find@4.6.0: {}
+
+  lodash.includes@4.3.0: {}
 
   lodash.memoize@4.1.2: {}
 
@@ -21727,7 +21782,7 @@ snapshots:
     dependencies:
       '@types/chai': 5.2.3
       '@vitest/expect': 3.2.4
-      '@vitest/mocker': 3.2.4(msw@2.12.7(@types/node@20.19.30)(typescript@5.9.3))(rolldown-vite@7.3.1(@types/node@24.10.15)(esbuild@0.27.3)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.2))
+      '@vitest/mocker': 3.2.4(msw@2.12.7(@types/node@20.19.30)(typescript@5.9.3))(rolldown-vite@7.3.1(@types/node@20.19.30)(esbuild@0.27.3)(jiti@2.6.1)(terser@5.44.1)(yaml@2.8.2))
       '@vitest/pretty-format': 3.2.4
       '@vitest/runner': 3.2.4
       '@vitest/snapshot': 3.2.4

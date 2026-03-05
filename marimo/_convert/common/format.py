@@ -46,6 +46,30 @@ def sql_to_marimo(
     )
 
 
+def cypher_to_marimo(
+    source: str,
+    table: str,
+    hide_output: bool = False,
+    engine: str | None = None,
+) -> str:
+    terminal_options = [codegen.indent_text('"""')]
+    if hide_output:
+        terminal_options.append(codegen.indent_text("output=False"))
+    if engine:
+        terminal_options.append(codegen.indent_text(f"engine={engine}"))
+
+    return "\n".join(
+        [
+            f"{table} = mo.cypher(",
+            # f-string: expected for cypher
+            codegen.indent_text('f"""'),
+            codegen.indent_text(source),
+            ",\n".join(terminal_options),
+            ")",
+        ]
+    )
+
+
 def get_markdown_from_cell(
     cell: Union[CellImpl, Cell], code: str
 ) -> Optional[str]:

@@ -33,7 +33,11 @@ from pymdownx.superfences import (  # type: ignore
 from marimo import _loggers
 from marimo._ast.cell import CellConfig
 from marimo._ast.names import DEFAULT_CELL_NAME
-from marimo._convert.common.format import markdown_to_marimo, sql_to_marimo
+from marimo._convert.common.format import (
+    cypher_to_marimo,
+    markdown_to_marimo,
+    sql_to_marimo,
+)
 from marimo._dependencies.dependencies import DependencyManager
 from marimo._schemas.serialization import (
     AppInstantiation,
@@ -153,6 +157,13 @@ def get_source_from_tag(tag: Element) -> str:
         source = markdown_to_marimo(source)
     elif tag.attrib.get("language") == "sql":
         source = sql_to_marimo(
+            source,
+            tag.attrib.get("query", "_df"),
+            str(tag.attrib.get("hide_output", "false")).lower() == "true",
+            tag.attrib.get("engine", None),
+        )
+    elif tag.attrib.get("language") == "cypher":
+        source = cypher_to_marimo(
             source,
             tag.attrib.get("query", "_df"),
             str(tag.attrib.get("hide_output", "false")).lower() == "true",

@@ -163,6 +163,20 @@ def convert_from_ir_to_markdown(
                         sql_options.pop("query")
                     attributes.update(sql_options)
                     code = "\n".join(cell_impl.raw_sqls).strip()
+            elif attributes["language"] == "cypher":
+                cypher_options: dict[str, str] | None = (
+                    _get_cypher_options_from_cell(code)
+                )
+                if not cypher_options:
+                    # means not cypher.
+                    attributes.pop("language")
+                else:
+                    # Ignore default query value.
+                    if cypher_options.get("query") == "_df":
+                        cypher_options.pop("query")
+                    attributes.update(cypher_options)
+                    raw_cypher = _get_raw_cypher_string_from_cell(code)
+                    code = raw_cypher if raw_cypher is not None else code
 
         # Definitely no "cell"; as such, treat as code, as everything in
         # marimo is code.
@@ -186,6 +200,58 @@ def _format_filename_title(filename: str) -> str:
     name, _ext = os.path.splitext(basename)
     title = re.sub("[-_]", " ", name)
     return title.title()
+
+
+def _get_raw_cypher_string_from_cell(code: str) -> str | None:
+    """Extract the raw Cypher query string from a mo.cypher() cell."""
+    import textwrap
+
+    code = code.strip()
+    try:
+        (body,) = ast.parse(code).body
+        value = body.value  # type: ignore[attr-defined]
+        if not (value.args and len(value.args) == 1):
+            return None
+        first_arg = value.args[0]
+        # Handle f-strings and regular strings
+        if isinstance(first_arg, ast.Constant):
+            return textwrap.dedent(str(first_arg.value)).strip()
+        if isinstance(first_arg, ast.JoinedStr):
+            # ast.unparse gives us the f-string; strip prefix and quotes
+            unparsed = ast.unparse(first_arg)
+            # unparsed looks like f"""...""" or f"..."
+            for prefix in ('f"""', "f'''", 'f"', "f'"):
+                if unparsed.startswith(prefix):
+                    suffix = prefix[1:]  # the quote part
+                    return textwrap.dedent(
+                        unparsed[len(prefix) : -len(suffix)]
+                    ).strip()
+        return None
+    except (AssertionError, AttributeError, ValueError):
+        return None
+
+
+def _get_cypher_options_from_cell(code: str) -> dict[str, str] | None:
+    options = {}
+    code = code.strip()
+    try:
+        (body,) = ast.parse(code).body
+        (target,) = body.targets  # type: ignore[attr-defined]
+        options["query"] = target.id
+        if body.value.func.attr == "cypher":  # type: ignore[attr-defined]
+            value = body.value  # type: ignore[attr-defined]
+        else:
+            return None
+        if value.keywords:
+            for keyword in value.keywords:  # type: ignore[attr-defined]
+                options[keyword.arg] = const_or_id(keyword.value)  # type: ignore[attr-defined]
+        output = options.pop("output", "True").lower()
+        if output == "false":
+            options["hide_output"] = "True"
+
+        return options
+    except (AssertionError, AttributeError, ValueError):
+        return None
 
 
 def _get_sql_options_from_cell(code: str) -> dict[str, str] | None:

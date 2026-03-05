@@ -1,5 +1,7 @@
 /* Copyright 2026 Marimo. All rights reserved. */
 
+export type { CypherMetadata, CypherOutputType } from "./parsers/cypher-parser.js";
+export { CypherParser } from "./parsers/cypher-parser.js";
 export type { MarkdownMetadata } from "./parsers/markdown-parser.js";
 export { MarkdownParser } from "./parsers/markdown-parser.js";
 export { PythonParser } from "./parsers/python-parser.js";

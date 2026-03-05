@@ -63,6 +63,7 @@
     "@marimo-team/react-slotz": "^0.2.0",
     "@marimo-team/smart-cells": "workspace:*",
     "@mui/material": "^6.5.0",
+    "@neo4j-cypher/editor-support": "1.0.2",
     "@open-rpc/client-js": "^1.8.1",
     "@paralleldrive/cuid2": "^2.3.1",
     "@radix-ui/colors": "^3.0.0",

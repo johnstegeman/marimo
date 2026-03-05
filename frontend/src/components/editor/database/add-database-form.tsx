@@ -45,6 +45,7 @@ import {
   IcebergConnectionSchema,
   MotherDuckConnectionSchema,
   MySQLConnectionSchema,
+  Neo4jConnectionSchema,
   PostgresConnectionSchema,
   PySparkConnectionSchema,
   RedshiftConnectionSchema,
@@ -54,6 +55,7 @@ import {
   TimeplusConnectionSchema,
   TrinoConnectionSchema,
 } from "./schemas";
+import { generateNeo4jCode, type Neo4jConnection } from "./neo4j-as-code";
 
 interface Props {
   onSubmit: () => void;
@@ -249,7 +251,8 @@ const DATA_CATALOGS = [
 
 const DatabaseSchemaSelector: React.FC<{
   onSelect: (schema: z.ZodType<DatabaseConnection>) => void;
-}> = ({ onSelect }) => {
+  onSelectNeo4j: () => void;
+}> = ({ onSelect, onSelectNeo4j }) => {
   const renderItem = ({ name, schema, color, logo }: ConnectionSchema) => {
     return (
       <button
@@ -279,6 +282,24 @@ const DatabaseSchemaSelector: React.FC<{
       </h4>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {DATA_CATALOGS.map(renderItem)}
+      </div>
+      <h4 className="font-semibold text-muted-foreground text-lg flex items-center gap-4">
+        Graph Databases
+        <hr className="flex-1" />
+      </h4>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <button
+          type="button"
+          className="py-3 flex flex-col items-center justify-center gap-1 transition-all hover:scale-105 hover:brightness-110 rounded shadow-sm-solid hover:shadow-md-solid"
+          style={{ backgroundColor: "#018BFF" }}
+          onClick={onSelectNeo4j}
+        >
+          <DatabaseLogo
+            name="neo4j"
+            className="w-8 h-8 text-white brightness-0 invert dark:invert"
+          />
+          <span className="text-white font-medium text-lg">Neo4j</span>
+        </button>
       </div>
     </>
   );
@@ -369,12 +390,75 @@ const DatabaseForm: React.FC<{
   );
 };
 
+const Neo4jForm: React.FC<{
+  onSubmit: () => void;
+  onBack: () => void;
+}> = ({ onSubmit, onBack }) => {
+  type Neo4jFormValues = z.infer<typeof Neo4jConnectionSchema>;
+
+  const form = useForm<Neo4jFormValues>({
+    defaultValues: getDefaults(Neo4jConnectionSchema),
+    resolver: zodResolver(
+      Neo4jConnectionSchema as unknown as z.ZodType<unknown, Neo4jFormValues>,
+    ),
+    reValidateMode: "onChange",
+  });
+
+  const { createNewCell } = useCellActions();
+  const lastFocusedCellId = useLastFocusedCellId();
+
+  const handleSubmit = (values: Neo4jFormValues) => {
+    const code = generateNeo4jCode(values as Neo4jConnection);
+    createNewCell({
+      code,
+      before: false,
+      cellId: lastFocusedCellId ?? "__end__",
+      skipIfCodeExists: true,
+    });
+    onSubmit();
+  };
+
+  return (
+    <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <SecretsProvider>
+        <ZodForm
+          schema={Neo4jConnectionSchema}
+          form={form}
+          renderers={RENDERERS}
+        >
+          <FormErrorsBanner />
+        </ZodForm>
+      </SecretsProvider>
+      <div className="flex gap-2">
+        <Button type="button" variant="outline" onClick={onBack}>
+          Back
+        </Button>
+        <Button type="submit" disabled={!form.formState.isValid}>
+          Add
+        </Button>
+      </div>
+    </form>
+  );
+};
+
 const AddDatabaseForm: React.FC<Props> = ({ onSubmit }) => {
   const [selectedSchema, setSelectedSchema] =
     useState<z.ZodType<DatabaseConnection> | null>(null);
+  const [showNeo4j, setShowNeo4j] = useState(false);
+
+  if (showNeo4j) {
+    return (
+      <Neo4jForm onSubmit={onSubmit} onBack={() => setShowNeo4j(false)} />
+    );
+  }
 
   if (!selectedSchema) {
-    return <DatabaseSchemaSelector onSelect={setSelectedSchema} />;
+    return (
+      <DatabaseSchemaSelector
+        onSelect={setSelectedSchema}
+        onSelectNeo4j={() => setShowNeo4j(true)}
+      />
+    );
   }
 
   return (

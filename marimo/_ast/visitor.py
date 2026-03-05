@@ -31,7 +31,7 @@ LOGGER = _loggers.marimo_logger()
 Name = str
 
 
-Language = Literal["python", "sql"]
+Language = Literal["python", "sql", "cypher"]
 
 
 @dataclass
@@ -632,6 +632,24 @@ class ScopedVisitor(ast.NodeVisitor):
             "duckdb.execute",
             "duckdb.sql",
         ]
+        valid_cypher_calls = [
+            "marimo.cypher",
+            "mo.cypher",
+        ]
+        call_name = (
+            f"{node.func.value.id}.{node.func.attr}"
+            if isinstance(node.func, ast.Attribute)
+            and isinstance(node.func.value, ast.Name)
+            else None
+        )
+        if (
+            call_name in valid_cypher_calls
+            and len(node.args) == 1
+        ):
+            self.language = "cypher"
+            # Visit arguments without SQL dependency analysis
+            self.generic_visit(node)
+            return node
         if (
             isinstance(node.func, ast.Attribute)
             and isinstance(node.func.value, ast.Name)

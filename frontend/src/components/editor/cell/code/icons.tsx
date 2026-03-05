@@ -16,6 +16,21 @@ export const PythonIcon = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+export const CypherIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    role="img"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    fill="currentColor"
+    {...props}
+  >
+    <title>Neo4j</title>
+    <path d="M17.53 5.1a7.7 7.7 0 0 1 .74 3.25c0 4.27-3.46 7.73-7.73 7.73a7.7 7.7 0 0 1-3.25-.74l-3 3.01a11.87 11.87 0 0 0 6.25 1.77c6.56 0 11.88-5.32 11.88-11.88 0-2.26-.64-4.37-1.77-6.25l-3.12 3.11zm-11.06 8.7a7.7 7.7 0 0 1-.74-3.25c0-4.27 3.46-7.73 7.73-7.73a7.7 7.7 0 0 1 3.25.74l3.01-3a11.87 11.87 0 0 0-6.26-1.78C6.9.78 1.58 6.1 1.58 12.66c0 2.26.64 4.37 1.77 6.25l3.12-3.1z" />
+  </svg>
+);
+
 export const MarkdownIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

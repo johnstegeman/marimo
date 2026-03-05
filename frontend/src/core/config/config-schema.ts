@@ -199,6 +199,7 @@ export const UserConfigSchema = z
       .looseObject({
         enabled: z.boolean().optional(),
         sql_linter: z.boolean().optional(),
+        cypher_linter: z.boolean().optional(),
       })
       .prefault(() => ({})),
     sharing: z

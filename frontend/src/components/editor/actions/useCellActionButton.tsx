@@ -16,6 +16,7 @@ import {
   EyeOffIcon,
   ImageIcon,
   LinkIcon,
+  NetworkIcon,
   PlayIcon,
   PlusCircleIcon,
   ScissorsIcon,
@@ -246,6 +247,22 @@ export function useCellActionButtons({ cell, closePopover }: Props) {
           maybeAddMarimoImport({ autoInstantiate, createNewCell: createCell });
           switchLanguage(editorView, {
             language: "sql",
+            keepCodeAsIs: false,
+          });
+        },
+        hidden: isSetupCell,
+      },
+      {
+        icon: <NetworkIcon size={13} strokeWidth={1.5} />,
+        label: "Convert to Cypher",
+        handle: () => {
+          const editorView = getEditorView();
+          if (!editorView) {
+            return;
+          }
+          maybeAddMarimoImport({ autoInstantiate, createNewCell: createCell });
+          switchLanguage(editorView, {
+            language: "cypher",
             keepCodeAsIs: false,
           });
         },

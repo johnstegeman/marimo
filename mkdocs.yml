@@ -91,6 +91,7 @@ nav:
           - Working with data: guides/working_with_data/index.md
           - DataFrames: guides/working_with_data/dataframes.md
           - SQL: guides/working_with_data/sql.md
+          - Cypher: guides/working_with_data/cypher.md
           - Plotting: guides/working_with_data/plotting.md
           - Remote Storage: guides/working_with_data/remote_storage.md
       - Migrate from Jupyter: guides/coming_from/jupyter.md
