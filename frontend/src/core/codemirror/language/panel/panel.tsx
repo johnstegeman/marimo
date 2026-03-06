@@ -1,11 +1,13 @@
 /* Copyright 2026 Marimo. All rights reserved. */
 import type { EditorView } from "@codemirror/view";
 import type { QuotePrefixKind } from "@marimo-team/smart-cells";
+import { useAtomValue } from "jotai";
 import { InfoIcon, PaintRollerIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
 import { normalizeName } from "@/core/cells/names";
+import { dataConnectionsMapAtom } from "@/core/datasets/data-source-connections";
 import { type ConnectionName, DUCKDB_ENGINE } from "@/core/datasets/engines";
 import { useAutoGrowInputProps } from "@/hooks/useAutoGrowInputProps";
 import { cellIdState } from "../../cells/state";
@@ -22,6 +24,7 @@ import {
   updateLanguageMetadata,
 } from "../metadata";
 import type { LanguageMetadataOf } from "../types";
+import { CellPluginRegistry } from "../../../plugins/cell-plugin-registry";
 import { getQuotePrefix, MarkdownQuotePrefixTooltip } from "./markdown";
 import { SQLEngineSelect, SQLModeSelect } from "./sql";
 
@@ -33,6 +36,7 @@ export const LanguagePanelComponent: React.FC<{
   const { spanProps, inputProps } = useAutoGrowInputProps({ minWidth: 50 });
   const languageAdapter = view.state.field(languageAdapterState);
   const cellId = view.state.facet(cellIdState);
+  const connectionsMap = useAtomValue(dataConnectionsMapAtom);
 
   let actions: React.ReactNode = <div />;
   let showDivider = false;
@@ -125,6 +129,31 @@ export const LanguagePanelComponent: React.FC<{
           </label>
         </div>
       </div>
+    );
+  }
+
+  const pluginRegistration = CellPluginRegistry.get(languageAdapter.type);
+  if (
+    pluginRegistration?.panel &&
+    !(languageAdapter instanceof SQLLanguageAdapter) &&
+    !(languageAdapter instanceof MarkdownLanguageAdapter)
+  ) {
+    const PluginPanel = pluginRegistration.panel;
+    const metadata = view.state.field(
+      languageMetadataField,
+    ) as Record<string, unknown>;
+    const connections = [...connectionsMap.values()].map((c) => ({
+      name: c.name as string,
+      displayName: c.display_name,
+      source: c.source,
+    }));
+    showDivider = true;
+    actions = (
+      <PluginPanel
+        metadata={metadata}
+        onChange={(update) => triggerUpdate(update)}
+        connections={connections}
+      />
     );
   }
 

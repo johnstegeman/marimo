@@ -48,10 +48,22 @@ SUPPORTED_ENGINES: list[type[BaseEngine[Any]]] = [
 def get_engines_from_variables(
     variables: list[tuple[VariableName, object]],
 ) -> list[tuple[VariableName, BaseEngine[Any]]]:
+    from marimo._plugins.core.cell_plugin import (
+        get_plugin_engine_classes,
+        get_plugin_registry,
+    )
+
+    # Discover plugins lazily so the kernel process also picks them up
+    # (discover_plugins is only called in the server process at startup).
+    registry = get_plugin_registry()
+    if not registry.get_all_plugins():
+        registry.discover_plugins()
+
     engines: list[tuple[VariableName, BaseEngine[Any]]] = []
+    all_engines = SUPPORTED_ENGINES + get_plugin_engine_classes()
 
     for variable_name, value in variables:
-        for sql_engine in SUPPORTED_ENGINES:
+        for sql_engine in all_engines:
             if sql_engine.is_compatible(value):
                 engines.append(
                     (

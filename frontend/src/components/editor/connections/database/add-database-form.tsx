@@ -4,7 +4,11 @@ import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { z } from "zod";
 import { DatabaseLogo, type DBLogoName } from "@/components/databases/icon";
-import { ConnectionForm, SelectorButton, SelectorGrid } from "../components";
+import {
+  ConnectionPluginRegistry,
+  type ConnectionPluginRegistration,
+} from "@/core/plugins/cell-plugin-registry";
+import { ConnectionForm, SelectorButton, SelectorGrid, useInsertCode } from "../components";
 import {
   ConnectionDisplayNames,
   type ConnectionLibrary,
@@ -222,7 +226,9 @@ const ALL_ENTRIES = [...DATABASES, ...DATA_CATALOGS];
 
 const DatabaseSchemaSelector: React.FC<{
   onSelect: (schema: z.ZodType<DatabaseConnection, FieldValues>) => void;
-}> = ({ onSelect }) => {
+  onSelectPlugin: (plugin: ConnectionPluginRegistration) => void;
+}> = ({ onSelect, onSelectPlugin }) => {
+  const plugins = ConnectionPluginRegistry.getAll();
   return (
     <>
       <SelectorGrid>
@@ -261,6 +267,37 @@ const DatabaseSchemaSelector: React.FC<{
           />
         ))}
       </SelectorGrid>
+      {plugins.length > 0 && (
+        <>
+          <h4 className="font-semibold text-muted-foreground text-lg flex items-center gap-4 my-2">
+            Plugins
+            <hr className="flex-1" />
+          </h4>
+          <SelectorGrid>
+            {plugins.map((plugin) => (
+              <SelectorButton
+                key={plugin.id}
+                name={plugin.name}
+                color={plugin.color}
+                icon={
+                  plugin.logoUrl ? (
+                    <img
+                      src={plugin.logoUrl}
+                      alt={plugin.name}
+                      className="w-8 h-8 brightness-0 invert"
+                    />
+                  ) : (
+                    <span className="text-white text-2xl font-bold">
+                      {plugin.name[0]}
+                    </span>
+                  )
+                }
+                onSelect={() => onSelectPlugin(plugin)}
+              />
+            ))}
+          </SelectorGrid>
+        </>
+      )}
     </>
   );
 };
@@ -273,13 +310,30 @@ export const AddDatabaseForm: React.FC<{
     DatabaseConnection,
     FieldValues
   > | null>(null);
+  const [selectedPlugin, setSelectedPlugin] =
+    useState<ConnectionPluginRegistration | null>(null);
+  const insertCode = useInsertCode();
+
+  if (selectedPlugin) {
+    const PluginForm = selectedPlugin.form;
+    return (
+      <PluginForm
+        onSubmit={onSubmit}
+        onBack={() => setSelectedPlugin(null)}
+        insertCode={insertCode}
+      />
+    );
+  }
 
   if (!selectedSchema) {
     return (
       <>
         {header}
         <div>
-          <DatabaseSchemaSelector onSelect={setSelectedSchema} />
+          <DatabaseSchemaSelector
+            onSelect={setSelectedSchema}
+            onSelectPlugin={setSelectedPlugin}
+          />
         </div>
       </>
     );

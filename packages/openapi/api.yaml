@@ -71,10 +71,7 @@ components:
           type: string
         language:
           default: python
-          enum:
-          - markdown
-          - python
-          - sql
+          type: string
         prompt:
           type: string
         selectedText:
@@ -152,10 +149,7 @@ components:
       properties:
         language:
           default: python
-          enum:
-          - markdown
-          - python
-          - sql
+          type: string
         prefix:
           type: string
         suffix:

@@ -182,6 +182,7 @@ nav:
           - Extending marimo: guides/integrating_with_marimo/index.md
           - Custom UI plugins: guides/integrating_with_marimo/custom_ui_plugins.md
           - Displaying objects: guides/integrating_with_marimo/displaying_objects.md
+          - Third-party plugins: guides/integrating_with_marimo/plugins.md
       - Coming from other tools:
           - Coming from other tools: guides/coming_from/index.md
           - Jupytext: guides/coming_from/jupytext.md
