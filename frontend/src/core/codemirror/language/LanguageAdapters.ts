@@ -1,6 +1,7 @@
 /* Copyright 2026 Marimo. All rights reserved. */
 
 import { once } from "@/utils/once";
+import { CellPluginRegistry } from "../../plugins/cell-plugin-registry";
 import { MarkdownLanguageAdapter } from "./languages/markdown";
 import { PythonLanguageAdapter } from "./languages/python";
 import { SQLLanguageAdapter } from "./languages/sql/sql";
@@ -25,5 +26,8 @@ export const LanguageAdapters: Record<LanguageAdapterType, LanguageAdapter> = {
 };
 
 export function getLanguageAdapters(): LanguageAdapter[] {
-  return Object.values(LanguageAdapters);
+  return [
+    ...Object.values(LanguageAdapters),
+    ...CellPluginRegistry.getAdapters(),
+  ];
 }

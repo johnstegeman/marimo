@@ -248,11 +248,14 @@ export function languageAdapterFromCode(doc: string): LanguageAdapter {
     return LanguageAdapters.python;
   }
 
-  if (LanguageAdapters.markdown.isSupported(doc)) {
-    return LanguageAdapters.markdown;
-  }
-  if (LanguageAdapters.sql.isSupported(doc)) {
-    return LanguageAdapters.sql;
+  const adapters = getLanguageAdapters();
+  for (const adapter of adapters) {
+    if (adapter.type === "python") {
+      continue;
+    }
+    if (adapter.isSupported(doc)) {
+      return adapter;
+    }
   }
 
   return LanguageAdapters.python;
@@ -280,9 +283,13 @@ export function switchLanguage(
     return;
   }
 
+  const adapters = getLanguageAdapters();
+  const nextLanguage =
+    adapters.find((a) => a.type === opts.language) || LanguageAdapters.python;
+
   updateLanguageAdapterAndCode({
     view,
-    nextLanguage: LanguageAdapters[opts.language],
+    nextLanguage,
     opts: {
       keepCodeAsIs: opts.keepCodeAsIs ?? false,
     },

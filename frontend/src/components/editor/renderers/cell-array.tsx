@@ -19,11 +19,18 @@ import { Cell } from "@/components/editor/notebook-cell";
 import { PackageAlert } from "@/components/editor/package-alert";
 import { SortableCellsProvider } from "@/components/sort/SortableCellsProvider";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Tooltip } from "@/components/ui/tooltip";
 import { maybeAddMarimoImport } from "@/core/cells/add-missing-import";
 import { SETUP_CELL_ID } from "@/core/cells/ids";
 import { LanguageAdapters } from "@/core/codemirror/language/LanguageAdapters";
 import { MARKDOWN_INITIAL_HIDE_CODE } from "@/core/codemirror/language/languages/markdown";
+import { CellPluginRegistry } from "@/core/plugins/cell-plugin-registry";
 import { aiEnabledAtom } from "@/core/config/config";
 import { canInteractWithAppAtom } from "@/core/network/connection";
 import { useBoolean } from "@/hooks/useBoolean";
@@ -321,6 +328,37 @@ const AddCellButtons: React.FC<{
           <DatabaseIcon className="mr-2 size-4 shrink-0" />
           SQL
         </Button>
+        {CellPluginRegistry.getAll().length > 0 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild={true}>
+              <Button
+                className={buttonClass}
+                variant="text"
+                size="sm"
+                disabled={!canInteractWithApp}
+              >
+                Plugins
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {CellPluginRegistry.getAll().map((plugin) => (
+                <DropdownMenuItem
+                  key={plugin.type}
+                  onClick={() => {
+                    createNewCell({
+                      cellId: { type: "__end__", columnId },
+                      before: false,
+                      code: plugin.languageAdapter.defaultCode,
+                    });
+                  }}
+                >
+                  {plugin.icon ?? <DatabaseIcon className="mr-2 size-4 shrink-0" />}
+                  {plugin.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
         <Tooltip
           content={
             aiEnabled ? null : (

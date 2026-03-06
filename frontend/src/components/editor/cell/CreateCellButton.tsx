@@ -13,6 +13,7 @@ import { maybeAddMarimoImport } from "@/core/cells/add-missing-import";
 import { useCellActions } from "@/core/cells/cells";
 import { LanguageAdapters } from "@/core/codemirror/language/LanguageAdapters";
 import { MARKDOWN_INITIAL_HIDE_CODE } from "@/core/codemirror/language/languages/markdown";
+import { CellPluginRegistry } from "@/core/plugins/cell-plugin-registry";
 import {
   getConnectionTooltip,
   isAppInteractionDisabled,
@@ -176,6 +177,17 @@ export const CreateCellButton = ({
           {renderIcon(<DiamondPlusIcon size={13} strokeWidth={1.5} />)}
           Setup cell
         </DropdownMenuItem>
+        {CellPluginRegistry.getAll().map((plugin) => (
+          <DropdownMenuItem
+            key={plugin.type}
+            onClick={() => {
+              onClick?.({ code: plugin.languageAdapter.defaultCode });
+            }}
+          >
+            {renderIcon(plugin.icon ?? <PlusIcon size={13} strokeWidth={1.5} />)}
+            {plugin.name} cell
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

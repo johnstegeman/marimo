@@ -16,3 +16,4 @@ Still need help? Reach out to us on [Discord](https://marimo.io/discord?ref=docs
 |-------|-------------|
 | [Displaying Objects](displaying_objects.md) | Richly display objects by hooking into marimo's media viewer |
 | [Custom UI Plugins](custom_ui_plugins.md) | Build custom UI plugins that hook into marimo's reactive execution engine |
+| [Third-Party Plugins](plugins.md) | Add new cell types, database connection UIs, or both via the plugin architecture |

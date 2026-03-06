@@ -490,6 +490,29 @@ async def serve_public_file(request: Request) -> Response:
     raise HTTPException(status_code=404, detail="File not found")
 
 
+@router.get("/plugins/{plugin_id}/assets/{asset_name:path}")
+def serve_plugin_asset(request: Request) -> Response:
+    from marimo._plugins.core.cell_plugin import get_plugin_registry
+
+    plugin_id = request.path_params.get("plugin_id")
+    asset_name = request.path_params.get("asset_name")
+
+    plugin = get_plugin_registry().get_plugin(plugin_id)
+    if not plugin:
+        raise HTTPException(status_code=404, detail="Plugin not found")
+
+    matched_path = None
+    for path in plugin.js_bundle_paths + plugin.css_bundle_paths:
+        if Path(path).name == asset_name:
+            matched_path = Path(path)
+            break
+
+    if not matched_path or not matched_path.is_file():
+        raise HTTPException(status_code=404, detail="Plugin asset not found")
+
+    return FileResponse(matched_path)
+
+
 # Catch all for serving static files
 @router.get("/{path:path}")
 async def serve_static(request: Request) -> FileResponse:

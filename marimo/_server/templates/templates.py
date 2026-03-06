@@ -13,6 +13,7 @@ from marimo._config.config import MarimoConfig, PartialMarimoConfig
 from marimo._convert.converters import MarimoConvert
 from marimo._messaging.notification import ModelLifecycleNotification
 from marimo._output.utils import uri_encode_component
+from marimo._plugins.core.cell_plugin import get_plugin_registry
 from marimo._schemas.notebook import NotebookV1
 from marimo._schemas.session import NotebookSessionV1
 from marimo._server.api.utils import parse_title
@@ -138,6 +139,7 @@ def home_page_template(
     # Add custom CSS from display config
     html = _inject_custom_css_for_config(html, user_config)
     html = _inject_custom_css_for_config(html, config_overrides)
+    html = _inject_plugin_assets(html, base_url)
     return html
 
 
@@ -315,6 +317,7 @@ def notebook_page_template(
             # Append to head
             html = html.replace("</head>", f"{head_contents}</head>")
 
+    html = _inject_plugin_assets(html, base_url)
     return html
 
 
@@ -430,6 +433,7 @@ def static_notebook_template(
 
     html = _inject_custom_css_for_config(html, user_config, filepath)
     html = _inject_custom_css_for_config(html, config_overrides, filepath)
+    html = _inject_plugin_assets(html, "")
     return html
 
 
@@ -609,3 +613,30 @@ def _replace_asset_urls(html: str, asset_url: Optional[str]) -> str:
         .replace('href="./', f'crossorigin="anonymous" href="{asset_url}/')
         .replace('src="./', f'crossorigin="anonymous" src="{asset_url}/')
     )
+
+
+def _inject_plugin_assets(html: str, base_url: str) -> str:
+    """Inject javascript and css bundle tags for third-party cell plugins."""
+    registry = get_plugin_registry()
+    tags = []
+
+    # Clean base url, ensuring no trailing slash
+    base_url = base_url.rstrip("/")
+
+    for plugin in registry.get_all_plugins():
+        for js_path in plugin.js_bundle_paths:
+            asset_name = Path(js_path).name
+            u = f"{base_url}/plugins/{plugin.id}/assets/{asset_name}"
+            tags.append(
+                f'<script type="module" crossorigin="anonymous" src="{u}"></script>'
+            )
+        for css_path in plugin.css_bundle_paths:
+            asset_name = Path(css_path).name
+            u = f"{base_url}/plugins/{plugin.id}/assets/{asset_name}"
+            tags.append(f'<link rel="stylesheet" href="{u}" />')
+
+    if tags:
+        plugin_block = "\n".join(tags) + "\n</head>"
+        html = html.replace("</head>", plugin_block)
+
+    return html

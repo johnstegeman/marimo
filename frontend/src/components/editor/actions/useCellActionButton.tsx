@@ -55,6 +55,7 @@ import type { CellConfig, RuntimeState } from "@/core/network/types";
 import { canLinkToCell, createCellLink } from "@/utils/cell-urls";
 import { copyToClipboard } from "@/utils/copy";
 import { downloadCellOutputAsImage } from "@/utils/download";
+import { CellPluginRegistry } from "@/core/plugins/cell-plugin-registry";
 import { MarkdownIcon, PythonIcon } from "../cell/code/icons";
 import { useDeleteCellCallback } from "../cell/useDeleteCell";
 import { useRunCell } from "../cell/useRunCells";
@@ -251,6 +252,23 @@ export function useCellActionButtons({ cell, closePopover }: Props) {
         },
         hidden: isSetupCell,
       },
+      ...CellPluginRegistry.getAll().map((plugin) => ({
+        icon: plugin.icon ?? (
+          <DatabaseIcon size={13} strokeWidth={1.5} />
+        ),
+        label: `Convert to ${plugin.name}`,
+        handle: () => {
+          const editorView = getEditorView();
+          if (!editorView) {
+            return;
+          }
+          switchLanguage(editorView, {
+            language: plugin.type,
+            keepCodeAsIs: false,
+          });
+        },
+        hidden: isSetupCell,
+      })),
       {
         icon: <PythonIcon />,
         label: "Toggle as Python",

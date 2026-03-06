@@ -264,6 +264,10 @@ def start(
         sandbox_mode=sandbox_mode,
     )
 
+    from marimo._plugins.core.cell_plugin import get_plugin_registry
+
+    get_plugin_registry().discover_plugins()
+
     log_level = "info" if development_mode else "error"
 
     lifespans_list = [

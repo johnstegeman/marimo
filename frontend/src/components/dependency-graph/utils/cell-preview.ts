@@ -4,11 +4,13 @@ import { MarkdownParser, SQLParser } from "@marimo-team/smart-cells";
 
 export interface CellPreview {
   text: string | undefined;
-  type: "python" | "markdown" | "sql";
+  type: string;
 }
 
 const markdownParser = new MarkdownParser();
 const sqlParser = new SQLParser();
+
+import { CellPluginRegistry } from "@/core/plugins/cell-plugin-registry";
 
 function firstNonEmptyLine(content: string): string | undefined {
   for (const line of content.split("\n")) {
@@ -29,6 +31,14 @@ function firstNonEmptyLine(content: string): string | undefined {
  */
 export function extractCellPreview(code: string): CellPreview {
   const trimmed = code.trim();
+
+  // Check custom plugins first
+  for (const parser of CellPluginRegistry.getParsers()) {
+    if (parser.isSupported(trimmed)) {
+      const { code: inner } = parser.transformIn(trimmed);
+      return { text: firstNonEmptyLine(inner), type: parser.type };
+    }
+  }
 
   if (markdownParser.isSupported(trimmed)) {
     const { code: inner } = markdownParser.transformIn(trimmed);

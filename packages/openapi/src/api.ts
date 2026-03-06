@@ -3215,11 +3215,8 @@ export interface components {
       /** @default null */
       context?: null | components["schemas"]["AiCompletionContext"];
       includeOtherCode: string;
-      /**
-       * @default python
-       * @enum {unknown}
-       */
-      language?: "markdown" | "python" | "sql";
+      /** @default python */
+      language?: string;
       prompt: string;
       /** @default null */
       selectedText?: string | null;
@@ -3272,11 +3269,8 @@ export interface components {
     };
     /** AiInlineCompletionRequest */
     AiInlineCompletionRequest: {
-      /**
-       * @default python
-       * @enum {unknown}
-       */
-      language?: "markdown" | "python" | "sql";
+      /** @default python */
+      language?: string;
       prefix: string;
       suffix: string;
     };
