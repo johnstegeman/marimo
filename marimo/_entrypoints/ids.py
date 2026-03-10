@@ -6,6 +6,7 @@ from typing import Literal
 # Internal entrypoints. Not user-facing as the API is not stable.
 KnownEntryPoint = Literal[
     "marimo.cell.executor",
+    "marimo.cell_plugins",
     "marimo.cache.store",
     "marimo.kernel.lifespan",
     "marimo.server.asgi.lifespan",

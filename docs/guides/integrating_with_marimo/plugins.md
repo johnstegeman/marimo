@@ -29,6 +29,18 @@ When the editor loads, marimo:
 4. For each variable in a notebook, checks `engine_classes` via
    `is_compatible()` to detect database connections.
 
+**Plugin ID and names:** The **plugin ID** used in URLs and asset paths
+(e.g. `/plugins/{plugin_id}/assets/...`) is derived from the Python
+`CellPlugin.name`: it is lowercased and any character that is not
+alphanumeric, underscore, or hyphen is replaced with a hyphen. Your
+frontend `CellPluginRegistration.type` and (for connection plugins)
+`ConnectionPluginRegistration.id` should match the plugin ID you
+expect from that name—e.g. `name="Cypher"` → ID `cypher` → use
+`type: "cypher"` in JS. The **entry point name** in `pyproject.toml`
+(e.g. `my-language`) only needs to be unique across installed
+packages; it is used for discovery and allowlist/denylist, not as the
+plugin ID.
+
 On the JavaScript side, the injected module must call
 `window.marimo.registerCellPlugin(...)` and/or
 `window.marimo.registerConnectionPlugin(...)` before the page finishes
@@ -78,8 +90,9 @@ my-language = "my_marimo_plugin.plugin:plugin"
 ```
 
 The entry point name (`my-language`) must be unique across all installed
-packages. Marimo normalises it into a URL-safe plugin ID by replacing
-non-alphanumeric characters with hyphens.
+packages. The plugin ID used for asset URLs comes from `CellPlugin.name`
+(see [Plugin ID and names](#overview) above); use the same value for
+`type` in your JavaScript registration.
 
 ### JavaScript bundle
 
@@ -597,6 +610,30 @@ window.marimo.registerConnectionPlugin({
   form: MyCombinedForm,
 });
 ```
+
+---
+
+## Behavior and lifecycle
+
+**Plugin order and matching:** When marimo decides which cell type or
+parser applies to a piece of code, it checks adapters and parsers in
+registration order (built-ins first, then plugins in the order their
+scripts load). The **first** adapter or parser whose `isSupported()`
+returns true wins. If multiple plugins could match the same content,
+script load order therefore matters; keep cell patterns distinct when
+possible.
+
+**Duplicate registration:** If the same cell type (`type`) or
+connection plugin (`id`) is registered more than once (e.g. two bundles
+register `type: "cypher"`), the **last** registration wins and
+overwrites the previous one. Avoid registering the same type or id
+from multiple packages.
+
+**Server startup:** Plugin discovery for the UI—which plugins get
+asset tags and which connection types appear in the datasource
+panel—runs when the marimo **server** starts. Installing or removing a
+plugin after the server is running will not update the UI until you
+restart the server.
 
 ---
 

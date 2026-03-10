@@ -284,8 +284,15 @@ export function switchLanguage(
   }
 
   const adapters = getLanguageAdapters();
-  const nextLanguage =
-    adapters.find((a) => a.type === opts.language) || LanguageAdapters.python;
+  const requestedAdapter = adapters.find((a) => a.type === opts.language);
+  const nextLanguage = requestedAdapter ?? LanguageAdapters.python;
+
+  if (requestedAdapter === undefined) {
+    Logger.warn(
+      `Language "${opts.language}" not found; falling back to Python. ` +
+        "The plugin may not be loaded or the cell type may be unavailable.",
+    );
+  }
 
   updateLanguageAdapterAndCode({
     view,

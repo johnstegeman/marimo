@@ -1,6 +1,7 @@
 /* Copyright 2026 Marimo. All rights reserved. */
 
 import { MarkdownParser, SQLParser } from "@marimo-team/smart-cells";
+import { CellPluginRegistry } from "@/core/plugins/cell-plugin-registry";
 
 export interface CellPreview {
   text: string | undefined;
@@ -9,8 +10,6 @@ export interface CellPreview {
 
 const markdownParser = new MarkdownParser();
 const sqlParser = new SQLParser();
-
-import { CellPluginRegistry } from "@/core/plugins/cell-plugin-registry";
 
 function firstNonEmptyLine(content: string): string | undefined {
   for (const line of content.split("\n")) {
